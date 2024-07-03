@@ -1,7 +1,7 @@
 {
   "name": "yml-to-model",
   "version": "1.0.0",
-  "description": "",
+  "description": "\uD83D\uDE80generate model from openapi yml file.",
   "main": "dist/index.js",
   "bin": {
     "yml-to-model": "dist/index.js"
@@ -11,9 +11,9 @@
     "test": "ts-node ./src/index.ts gen ./schema/user.yml",
     "test:args": "ts-node ./src/index.ts gen ./schema/user.yml --template ./schema/templateJava"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["openapi", "java", "typescript"],
+  "author": "zzq",
+  "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
