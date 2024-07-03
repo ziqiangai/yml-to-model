@@ -20,9 +20,6 @@ dependencies:
   js-yaml:
     specifier: ^4.1.0
     version: 4.1.0
-  typescript:
-    specifier: ^5.5.3
-    version: 5.5.3
 
 devDependencies:
   '@types/commander':
@@ -46,6 +43,9 @@ devDependencies:
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@20.14.9)(typescript@5.5.3)
+  typescript:
+    specifier: ^5.5.3
+    version: 5.5.3
 
 packages:
 
@@ -566,6 +566,7 @@ packages:
     resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /uglify-js@3.18.0:
     resolution: {integrity: sha512-SyVVbcNBCk0dzr9XL/R/ySrmYf0s372K6/hFklzgcp2lBFyXtw4I7BOdDjlLhE1aVqaI/SHWXWmYdlZxuyF38A==}
