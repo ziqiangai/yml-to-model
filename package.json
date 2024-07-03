@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node ./src/index.ts gen ./schema/user.yml",
+    "test:args": "ts-node ./src/index.ts gen ./schema/user.yml --template ./schema/templateJava"
   },
   "keywords": [],
   "author": "",

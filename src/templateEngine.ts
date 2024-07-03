@@ -70,7 +70,6 @@ export const loadModelsFromYaml = (ymlFilePath: string, projectName: string): Re
     const yamlFilePath = path.resolve(ymlFilePath, `${projectName}.yml`);
     const yamlData = fs.readFileSync(yamlFilePath, 'utf8');
     const load = yaml.load(yamlData) as any;
-    console.log('zzq see yml is', load);
     const modelDefinitions = load.components.schemas;
     return modelDefinitions;
 };
@@ -86,64 +85,53 @@ export const renderTemplate = (inOneFile: boolean, ymlPath: string, ymlName: str
     : RenderedFile[] => {
 
     const data = loadModelsFromYaml(ymlPath, ymlName);
-    let templates: Record<string, string>;
+    let templates: Record<string, string> = {};
+    let templateContent = '';
+    let fileName = ymlName + '.ts';
+    if (language === 'typescript') {
+        templateContent = defaultTypeScriptTemplate;
+        fileName = '{{@key}}.ts';
+    }else if (language === 'java') {
+        templateContent = defaultJavaTemplate;
+        fileName = '{{@key}}.java';
+    }
     if (templatePath && templatePath !== 'default') {
         // 从模板文件加载模板内容
-        const templateContent = fs.readFileSync(templatePath, 'utf8');
-        templates = {templateContent: ymlName + '.ts'};
-    } else {
-        // 根据语言选择模板内容
-        switch (language.toLowerCase()) {
-            case 'typescript':
-                templates = {
-                    [defaultTypeScriptTemplate]: ymlName + '.ts',
-                };
-                break;
-            case 'java':
-                templates = {
-                    [defaultJavaTemplate]: '{{@key}}.java'
-                };
-                break;
-            default:
-                throw new Error(`Unsupported language: ${language}.`);
-        }
+        templateContent = fs.readFileSync(templatePath, 'utf8');
+        console.log('zadsd', templateContent);
     }
-
+    templates[fileName] = templateContent;
     const renderedFiles: RenderedFile[] = [];
 
     // 编译并渲染每个模板
-    for (const templateContent in templates) {
-        if (templates.hasOwnProperty(templateContent)) {
-            const templateName = templates[templateContent];
-            const template = handlebars.compile(templateContent);
-            console.log('zzq see data', templateContent);
-            if (!inOneFile) {
-                for (const key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        console.log('set', {...data[key], key});
-                        const renderedTemplate = template({...data[key], key, modelName: key});
-                        console.log('xxx', renderedTemplate);
-                        // 根据语言确定文件名后缀
-                        const fileName = templateName.replace('{{@key}}', key);
-                        renderedFiles.push({fileName, content: renderedTemplate});
-                    }
+    for (const templateName in templates) {
+        const templateContent = templates[templateName];
+        const template = handlebars.compile(templateContent);
+        console.log('zzq see datan', inOneFile, data);
+        if (inOneFile) {
+            const models: { models: any[];} = {models: []}
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const item = {...data[key], key, modelName: key};
+                    models.models.push(item);
                 }
-            }else {
-                const models: { models: any[];} = {models: []}
-                for (const key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        const item = {...data[key], key, modelName: key};
-                        models.models.push(item);
-                    }
+            }
+            const renderedTemplate = template(models);
+            // 根据语言确定文件名后缀
+            const fileName = templateName.replace('{{@key}}', ymlName);
+            renderedFiles.push({fileName, content: renderedTemplate});
+        }else {
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const renderedTemplate = template({...data[key], key, modelName: key});
+                    // 根据语言确定文件名后缀
+                    const fileName = templateName.replace('{{@key}}', key);
+                    renderedFiles.push({fileName, content: renderedTemplate});
                 }
-                const renderedTemplate = template(models);
-                // 根据语言确定文件名后缀
-                const fileName = templateName.replace('{{@key}}', ymlName);
-                renderedFiles.push({fileName, content: renderedTemplate});
             }
         }
     }
-
+    console.log('zzz', renderedFiles);
     // 将结果返回
     return renderedFiles;
 };
@@ -154,7 +142,6 @@ export const renderTemplate = (inOneFile: boolean, ymlPath: string, ymlName: str
  * @returns {string} 类型字符串
  */
 function getJavaType(value: any): string {
-    console.log('sd', value);
     let { type, items, $ref } = value;
     if (type === undefined && $ref !== undefined) {
         type = 'object';
@@ -193,7 +180,6 @@ function getJavaType(value: any): string {
  * @returns {string} 类型字符串
  */
 function getTsType(value: any): string {
-    console.log('sd', value);
     let { type, items, $ref } = value;
     if (type === undefined && $ref !== undefined) {
         type = 'object';

@@ -64,10 +64,12 @@ program
         const {language: selectedLanguage, template: templatePath, output: outputPath} = answers;
         const ymlMeta = parseProjectName(yml);
         // 使用模板引擎渲染模板并生成文件
-        const l = language || selectedLanguage;
+        const l = (language || selectedLanguage).trim().toLowerCase();
+        console.log('l is', l);
         const generatedCode = renderTemplate(
             l.toLowerCase() !== 'java',
-            ymlMeta.path, ymlMeta.fileName,
+            ymlMeta.path,
+            ymlMeta.fileName,
             l,
             template || templatePath
         );

@@ -1,0 +1,20 @@
+package io.github.collagrid;
+import java.util.*;
+
+/**
+ * {{this.title}}
+ *
+ * {{this.description}}
+ */
+public class {{modelName}} {
+
+{{#each this.properties}}
+
+     {{#if this.description}}
+    /**
+     * {{this.description}}
+     */
+    {{/if}}
+    public {{{getJavaType this}}} {{@key}};
+{{/each}}
+}
