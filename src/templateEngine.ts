@@ -98,7 +98,6 @@ export const renderTemplate = (inOneFile: boolean, ymlPath: string, ymlName: str
     if (templatePath && templatePath !== 'default') {
         // 从模板文件加载模板内容
         templateContent = fs.readFileSync(templatePath, 'utf8');
-        console.log('zadsd', templateContent);
     }
     templates[fileName] = templateContent;
     const renderedFiles: RenderedFile[] = [];
@@ -107,7 +106,6 @@ export const renderTemplate = (inOneFile: boolean, ymlPath: string, ymlName: str
     for (const templateName in templates) {
         const templateContent = templates[templateName];
         const template = handlebars.compile(templateContent);
-        console.log('zzq see datan', inOneFile, data);
         if (inOneFile) {
             const models: { models: any[];} = {models: []}
             for (const key in data) {
@@ -131,7 +129,6 @@ export const renderTemplate = (inOneFile: boolean, ymlPath: string, ymlName: str
             }
         }
     }
-    console.log('zzz', renderedFiles);
     // 将结果返回
     return renderedFiles;
 };

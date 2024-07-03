@@ -60,12 +60,10 @@ program
 
         // 使用 inquirer 进行用户交互
         const answers = await inquirer.prompt(questions);
-        console.log('zzq see answers', answers);
         const {language: selectedLanguage, template: templatePath, output: outputPath} = answers;
         const ymlMeta = parseProjectName(yml);
         // 使用模板引擎渲染模板并生成文件
         const l = (language || selectedLanguage).trim().toLowerCase();
-        console.log('l is', l);
         const generatedCode = renderTemplate(
             l.toLowerCase() !== 'java',
             ymlMeta.path,
@@ -80,7 +78,6 @@ program
         });
         // 确保输出目录存在，然后写入生成的文件
 
-        console.log(`生成成功！`);
     });
 
 // 解析命令行参数
